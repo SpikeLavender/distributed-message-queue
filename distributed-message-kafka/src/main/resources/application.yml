@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: distributed-message-kafka
+  kafka:
+    # 用于建立初始连接的broker地址
+    bootstrap-servers: 192.168.137.156:9092, 192.168.137.158:9092, 192.168.137.159:9092
+    # producer用到的key和value的序列化类
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: com.natsumes.kafka.serializer.UserSerializer
+      # 默认的批处理记录数
+      batch-size: 16384
+      # 32MB的总发送缓存
+      buffer-memory: 33554432
+    # consumer用到的key和value的反序列化类
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # consumer的消费组id
+      group-id: ${spring.application.name}-consumer
+      # 是否自动提交消费者偏移量
+      enable-auto-commit: true
+      # 每隔100ms向broker提交一次偏移量
+      auto-commit-interval: 100
+      # 如果该消费者的偏移量不存在，则自动设置为最早的偏移量
+      auto-offset-reset: earliest
+
+server:
+  port: 8080
