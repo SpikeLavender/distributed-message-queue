@@ -23,20 +23,20 @@ import java.util.Map;
 @Configuration
 public class KafkaConsumerConfigure {
 
-    @Bean
-    public Map<String, Object> consumerConfigs() {
-        Map<String, Object> props = new HashMap<>(16);
-        props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, "com.natsumes.kafka.interceptor.CustomProducerInterceptor");
-        return props;
-    }
-
-    @Bean
-    public ConsumerFactory<String, String> consumerFactory() {
-        DefaultKafkaConsumerFactory<String, String> factory = new DefaultKafkaConsumerFactory<>(consumerConfigs());
-        factory.setKeyDeserializer(new StringDeserializer());
-        factory.setValueDeserializer(new StringDeserializer());
-        return factory;
-    }
+//    @Bean
+//    public Map<String, Object> consumerConfigs() {
+//        Map<String, Object> props = new HashMap<>(16);
+//        props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, "com.natsumes.kafka.interceptor.CustomProducerInterceptor");
+//        return props;
+//    }
+//
+//    @Bean
+//    public ConsumerFactory<String, String> consumerFactory() {
+//        DefaultKafkaConsumerFactory<String, String> factory = new DefaultKafkaConsumerFactory<>(consumerConfigs());
+//        factory.setKeyDeserializer(new StringDeserializer());
+//        factory.setValueDeserializer(new StringDeserializer());
+//        return factory;
+//    }
 
     /**
      * 构建并行消费监听容器 多线程消费
@@ -44,14 +44,15 @@ public class KafkaConsumerConfigure {
      * @param consumerFactory
      * @return
      */
-    @Bean("kafkaListenerContainerFactory")
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory(
-            @Qualifier("consumerFactory") ConsumerFactory<String, String> consumerFactory) {
-        ConcurrentKafkaListenerContainerFactory<String, String> containerFactory = new ConcurrentKafkaListenerContainerFactory<>();
-        containerFactory.setConsumerFactory(consumerFactory);
-        containerFactory.getContainerProperties().setAckOnError(false);
-        // 设置ack模型机制 当发生error时 不同处理机制针对与offset有不同处理机制
-        containerFactory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
-        return containerFactory;
-    }
+//    @Bean("kafkaListenerContainerFactory")
+//    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory(
+//            @Qualifier("consumerFactory") ConsumerFactory<String, String> consumerFactory) {
+//        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+//        factory.getContainerProperties().setGroupId("distributed-message-kafka-consumer");
+//        factory.setConsumerFactory(consumerFactory);
+//        factory.getContainerProperties().setAckOnError(false);
+//        // 设置ack模型机制 当发生error时 不同处理机制针对与offset有不同处理机制
+//        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
+//        return factory;
+//    }
 }

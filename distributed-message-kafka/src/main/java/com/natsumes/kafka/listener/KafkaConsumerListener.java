@@ -1,6 +1,7 @@
 package com.natsumes.kafka.listener;
 
 import com.natsumes.kafka.entity.User;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -30,7 +31,10 @@ public class KafkaConsumerListener {
 
     @KafkaListener(
                 topics = "topic-natsumes-04",
-                properties = {"value.deserializer=com.natsumes.kafka.serializer.UserDeserializer"}
+                properties = {
+                        "value.deserializer=com.natsumes.kafka.serializer.UserDeserializer",
+                        ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG + "=com.natsumes.kafka.interceptor.CustomConsumerInterceptor"
+                }
             )
     public void onUserMessage(ConsumerRecord<String, User> record) {
         Optional<ConsumerRecord<String, User>> optional = Optional.ofNullable(record);
